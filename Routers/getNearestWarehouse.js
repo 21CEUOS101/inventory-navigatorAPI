@@ -13,7 +13,7 @@ router.post("/find-nearest", async (req, res) => {
         const pincode = req.body.pincode;
         const n_pincode = await findNearestPincode(pincode, all_pincodes);
  
-        res.json(n_pincode);
+        res.json({ nearest_pincode: n_pincode });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Internal Server Error" });
