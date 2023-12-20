@@ -1,16 +1,17 @@
-import Axios from 'axios';
-import { url } from './index.js';
+const Axios = require('axios');
+const url = require('./index');
 
-export const getWarehouseById = async (id) => {
 
-    const data = await Axios.get(`${url}/api/warehouse/${id}`).then((response) => {
-        return response.data;
-    });
+// const getWarehouseById = async (id) => {
+
+//     const data = await Axios.get(`${url}/api/warehouse/${id}`).then((response) => {
+//         return response.data;
+//     });
     
-    return data;
-}
+//     return data;
+// }
 
-export const getWarehouses = async () => {
+const getWarehouses = async () => {
         
     const data = await Axios.get(`${url}/api/warehouses`).then((response) => {
         return response.data;
@@ -19,29 +20,41 @@ export const getWarehouses = async () => {
     return data;
 }
 
-export const createWarehouse = async (warehouse) => {
+// const createWarehouse = async (warehouse) => {
         
-    const data = await Axios.post(`${url}/api/warehouse`, warehouse).then((response) => {
-        return response.data;
-    });
+//     const data = await Axios.post(`${url}/api/warehouse`, warehouse).then((response) => {
+//         return response.data;
+//     });
     
-    return data;
-}
+//     return data;
+// }
 
-export const updateWarehouse = async (warehouse) => {
+// const updateWarehouse = async (id , warehouse) => {
             
-    const data = await Axios.put(`${url}/api/warehouse/${id}`, warehouse).then((response) => {
-        return response.data;
-    });
+//     const data = await Axios.put(`${url}/api/warehouse/${id}`, warehouse).then((response) => {
+//         return response.data;
+//     });
     
-    return data;
-}
+//     return data;
+// }
 
-export const deleteWarehouse = async (id) => {
+// const deleteWarehouse = async (id) => {
 
-    const data = await Axios.delete(`${url}/api/warehouse/${id}`).then((response) => {
-        return response.data;
-    });
+//     const data = await Axios.delete(`${url}/api/warehouse/${id}`).then((response) => {
+//         return response.data;
+//     });
     
-    return data;
-}
+//     return data;
+// }
+
+// module.exports = {
+//     getWarehouseById,
+//     getWarehouses,
+//     createWarehouse,
+//     updateWarehouse,
+//     deleteWarehouse
+// };
+
+module.exports = {
+    getWarehouses
+};
