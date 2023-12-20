@@ -1,27 +1,28 @@
 const { default: axios } = require('axios');
 const geolib = require('geolib');
 
-async function findNearestWarehouse(orderPincode, warehousePincodes) {
-    const orderCoords = await getCoordinatesForPincode(orderPincode);
+async function findNearestPincode(pincode, pincodes) {
+    const orderCoords = await getCoordinatesForPincode(pincode);
 
-    let nearestWarehouse = null;
+    let nearestPincode = null;
     let minDistance = Infinity;
 
     // Use Promise.all to wait for all asynchronous tasks to complete
-    await Promise.all(warehousePincodes.map(async (warehousePincode) => {
-        const warehouseCoords = await getCoordinatesForPincode(warehousePincode);
+    await Promise.all(pincodes.map(async (p) => {
+        const warehouseCoords = await getCoordinatesForPincode(p);
 
         const distance = geolib.getPreciseDistance(orderCoords, warehouseCoords);
+
         // distance is in kilometers
-        console.log(`Distance between ${orderPincode} and ${warehousePincode} is ${distance / 1000} km`);
+        // console.log(`Distance between ${pincode} and ${p} is ${distance / 1000} km`);
 
         if (distance < minDistance) {
             minDistance = distance;
-            nearestWarehouse = warehousePincode;
+            nearestPincode = p;
         }
     }));
 
-    return nearestWarehouse;
+    return nearestPincode;
 }
 
 async function getCoordinatesForPincode(pincode) {
@@ -50,5 +51,5 @@ async function getCoordinatesForPincode(pincode) {
 // })();
 
 module.exports = {
-    findNearestWarehouse
+    findNearestPincode
 };
