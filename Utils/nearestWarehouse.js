@@ -1,42 +1,54 @@
-// Importing the 'geolib' library for distance calculation
+const { default: axios } = require('axios');
 const geolib = require('geolib');
 
-// Function to find the nearest warehouse
-function findNearestWarehouse(orderPincode, warehousePincodes) {
-    const orderCoords = getCoordinatesForPincode(orderPincode);
+async function findNearestWarehouse(orderPincode, warehousePincodes) {
+    const orderCoords = await getCoordinatesForPincode(orderPincode);
 
     let nearestWarehouse = null;
     let minDistance = Infinity;
 
-    warehousePincodes.forEach((warehousePincode) => {
-        const warehouseCoords = getCoordinatesForPincode(warehousePincode);
-        const distance = geolib.getDistance(orderCoords, warehouseCoords);
+    // Use Promise.all to wait for all asynchronous tasks to complete
+    await Promise.all(warehousePincodes.map(async (warehousePincode) => {
+        const warehouseCoords = await getCoordinatesForPincode(warehousePincode);
+
+        const distance = geolib.getPreciseDistance(orderCoords, warehouseCoords);
+        // distance is in kilometers
+        console.log(`Distance between ${orderPincode} and ${warehousePincode} is ${distance / 1000} km`);
 
         if (distance < minDistance) {
             minDistance = distance;
             nearestWarehouse = warehousePincode;
         }
-    });
+    }));
 
     return nearestWarehouse;
 }
 
-// Replace this function with your actual code to get coordinates for a given pin code
-function getCoordinatesForPincode(pincode) {
-    // Implement your logic to obtain coordinates for the given pin code
-    // This might involve calling a geocoding API or using a database
-    // For simplicity, return placeholder coordinates {latitude, longitude} for now
-    return { latitude: 0, longitude: 0 };
+async function getCoordinatesForPincode(pincode) {
+    try {
+        const response = await axios.get(`https://nominatim.openstreetmap.org/search?format=json&q=${pincode}`);
+        
+        if (response.data && response.data.length > 0) {
+            const result = response.data[0];
+            return {
+                latitude: parseFloat(result.lat),
+                longitude: parseFloat(result.lon),
+            };
+        } else {
+            throw new Error('No coordinates found for the given pincode');
+        }
+    } catch (error) {
+        console.error('Error fetching coordinates:', error.message);
+        throw error;
+    }
 }
 
-// Example usage:
-const orderPincode = "12345";
-const warehousePincodes = ["54321", "67890", "98765"];
+// Ensure the top-level function is asynchronous
+// (async () => {
+//     const warehouse = await findNearestWarehouse(387002, [362001, 390002, 110005]);
+//     console.log(warehouse);
+// })();
 
-const nearestWarehouse = findNearestWarehouse(orderPincode, warehousePincodes);
-console.log("Nearest Warehouse:", nearestWarehouse);
-
-// export 
 module.exports = {
     findNearestWarehouse
 };
