@@ -1,4 +1,4 @@
-const { getWarehouses } = require("../Services/WarehouseService");
+// Desc: Router to get the nearest warehouse from the given pincode
 const { findNearestWarehouse } = require("../Utils/nearestWarehouse");
 
 const express = require("express")
@@ -9,7 +9,7 @@ router.use(express.json());
 
 router.get("/nearest-warehouse", async (req, res) => {
     try {
-        const all_warehouses = await getWarehouses();
+        const all_warehouses = req.body.warehouses;
         const pincode = req.body.pincode;
         const warehouse = await findNearestWarehouse(pincode, all_warehouses);
  
