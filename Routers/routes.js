@@ -1,5 +1,6 @@
 // Desc: Router to get the nearest warehouse from the given pincode
 const { findNearestPincode } = require("../Utils/nearestWarehouse");
+const { getDistance } = require("../Utils/getDistance");
 
 const express = require("express")
 
@@ -17,6 +18,17 @@ router.post("/find-nearest", async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
+router.post('/get-distance', async (req, res) => {
+    try {
+        const { source, destination } = req.body;
+        const distance = await getDistance(source, destination);
+        res.json({ distance });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 

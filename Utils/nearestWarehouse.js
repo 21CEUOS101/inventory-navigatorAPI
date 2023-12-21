@@ -2,16 +2,16 @@ const { default: axios } = require('axios');
 const geolib = require('geolib');
 
 async function findNearestPincode(pincode, pincodes) {
-    const orderCoords = await getCoordinatesForPincode(pincode);
+    const pCoords = await getCoordinatesForPincode(pincode);
 
     let nearestPincode = null;
     let minDistance = Infinity;
 
     // Use Promise.all to wait for all asynchronous tasks to complete
     await Promise.all(pincodes.map(async (p) => {
-        const warehouseCoords = await getCoordinatesForPincode(p);
+        const coords = await getCoordinatesForPincode(p);
 
-        const distance = geolib.getPreciseDistance(orderCoords, warehouseCoords);
+        const distance = geolib.getPreciseDistance(pCoords, coords);
 
         // distance is in kilometers
         // console.log(`Distance between ${pincode} and ${p} is ${distance / 1000} km`);
