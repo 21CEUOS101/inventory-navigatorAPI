@@ -1,6 +1,6 @@
 # Pincode Locator API
 
-The Pincode Locator API is a powerful tool for finding the nearest pincode based on a given pincode. This can be particularly useful for tasks such as warehouse allocation, where proximity is a key factor.
+The Pincode Locator API is a powerful tool for finding the nearest pincode based on a given pincode, now with the added capability to calculate the distance between two pincodes. This can be particularly useful for tasks such as warehouse allocation, where proximity is a key factor.
 
 ## Table of Contents
 
@@ -17,6 +17,7 @@ The Pincode Locator API is a powerful tool for finding the nearest pincode based
 ## Features
 
 - Find the nearest pincode from a given list.
+- Calculate the distance between two pincodes.
 - Easily integrate into your application for warehouse allocation or similar tasks.
 - Built on Express and Node.js for efficiency and scalability.
 
@@ -40,7 +41,7 @@ Make sure you have the following installed:
 2. Navigate to the project directory:
 
    ```bash
-   cd pincode-locator-api
+   cd inventory-navigatorAPI
    ```
 
 3. Install dependencies:
@@ -53,6 +54,8 @@ Make sure you have the following installed:
 
 ### Request Format
 
+#### Find Nearest Pincode
+
 Send a POST request to the `/api/find-nearest` endpoint with the following JSON format:
 
 ```json
@@ -62,13 +65,34 @@ Send a POST request to the `/api/find-nearest` endpoint with the following JSON 
 }
 ```
 
+#### Get Distance Between Pincodes
+
+Send a POST request to the `/api/get-distance` endpoint with the following JSON format:
+
+```json
+{
+    "source": 387002,
+    "destination": 392001
+}
+```
+
 ### Response Format
 
-The API will respond with a JSON object containing the nearest pincode:
+The API will respond with a JSON object containing the nearest pincode or the distance between the two pincodes, depending on the endpoint.
+
+#### Nearest Pincode Response:
 
 ```json
 {
     "nearest_pincode": 387001
+}
+```
+
+#### Distance Calculation Response:
+
+```json
+{
+    "distance": 110.859
 }
 ```
 
@@ -77,20 +101,34 @@ The API will respond with a JSON object containing the nearest pincode:
 ```javascript
 const axios = require('axios');
 
-const requestData = {
+// Example for finding the nearest pincode
+const findNearestRequestData = {
   pincode: 387002,
   pincodes: [362001, 390002, 387001]
 };
 
-axios.post('https://inventory-navigatorapi.onrender.com/api/find-nearest', requestData)
+axios.post('https://inventory-navigatorapi.onrender.com/api/find-nearest', findNearestRequestData)
   .then(response => {
     console.log('Nearest Pincode:', response.data.nearest_pincode);
   })
   .catch(error => {
     console.error('Error:', error.message);
   });
-```
 
+// Example for getting distance between two pincodes
+const getDistanceRequestData = {
+  source: 387002,
+  destination: 392001
+};
+
+axios.post('https://inventory-navigatorapi.onrender.com/api/get-distance', getDistanceRequestData)
+  .then(response => {
+    console.log('Distance:', response.data.distance);
+  })
+  .catch(error => {
+    console.error('Error:', error.message);
+  });
+```
 
 ## Acknowledgments
 
